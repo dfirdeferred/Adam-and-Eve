@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AandE</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .bg {
+    background-image: url('mamba.webp');
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .content-box {
+    background-color: white;
+    padding: 20px;
+    width: 300px;
+    margin: 20px;
+    max-height: 500px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrollbar if needed */
+  }
+
+  .main-title {
+    margin-top: 20px;
+    background-color: #f0f0f0;
+    display: inline-block;
+    padding: 10px 20px;
+  }
+
+  h1 {
+    font-size: 60px;
+    margin: 10px 0;
+    font-family: Times, Times New Roman, serif;
+  }
+
+  h3 {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+
+  h2 {
+    font-size: 24px;
+    color: #666;
+    margin: 0;
+    font-family: OCR A Std, monospace;
+  }
+
+  ul {
+    list-style-type: none; /* Remove numbering */
+    text-align: left;
+    display: inline-block;
+    margin-left: 0;
+    padding-left: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg">
+    <div class="main-title">
+        <h1>A.D.E.M. & E.V.E.</h1>
+        <h2>Active Directory Enumeration Multitool</h2>
+        <h2>              AND                      </h2>
+        <h2>Exchange Vulnerability Enumerator</h2>
+      </div>
+  <div class="content-box">
+    <h3>Command Endpoints</h3>
+    <ul>
+      <li><a href="http://localhost/cmd/?">/cmd/custom-command</a></li>
+      send custom command to powershell client. ex: Server-IP/cmd/ipconfig
+            <p></p>
+      <li><a href="http://localhost/admins">/admins</a></li>
+      enumerates AD admins
+      <p></p>
+      <li><a href="http://localhost/firewall">/firewall</a></li>
+      enumerates firewall configuration of client
+      <p></p>
+      <li><a href="http://localhost/services">/services</a></li>
+      retrieves local services
+      <p></p>
+      <li><a href="http://localhost/services/dc">/services/dc</a></li>
+      attempts to retrieve services from Domain Controllers
+      <p></p>
+      <li><a href="http://localhost/pwnd">/pwnd</a></li>
+      endpoint for client to retrieve commands via http
+      <p></p>
+      <li><a href="http://localhost/result">/result</a></li>
+      retieves last result from client
+      <p></p>
+      <li><a href="http://localhost/allresults">/allresults</a></li>
+      retieves content from the log file
+      <p></p>
+      <li><a href="http://localhost/shares">/shares</a></li>
+      enumerates all "server-like computers" for accessible shares
+      <p></p>
+      <li><a href="http://localhost/shares/all">/shares/all</a></li>
+      enumerates all computers for accessible shares
+      <p></p>
+      <li><a href="http://localhost/trimarc">/trimarc</a></li>
+      runs the Trimarc checks script
+      <p></p>
+      <li><a href="http://localhost/whoami">/whoami</a></li>
+      retrieves data about the client session's current user
+      <p></p>
+      <li><a href="http://localhost/dns">/dns</a></li>
+      enumerates domain dns information
+      <p></p>
+      <li><a href="http://localhost/portscan">/portscan</a></li>
+      performs a port scan of the local subnet
+      <p></p>
+      <li><a href="http://localhost/passspray">/passspray</a></li>
+      performs password spray against the domain
+      <p></p>
+      <li><a href="http://localhost/moab">/moab</a></li>
+      attempts to replicate to other clients
+      <p></p>
+      <li><a href="http://localhost/sharphound">/sharphound</a></li>
+      runs the sharphound collector
+      <p></p>
+      <li><a href="http://localhost/azurehound">/azurehound</a></li>
+      runs the azurehound collector 
+      <p></p>
+      <li><a href="http://localhost/kill">/kill</a></li>
+      kills all client connections
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
