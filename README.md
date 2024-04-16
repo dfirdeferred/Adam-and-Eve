@@ -10,9 +10,9 @@ Run adameve.py
 The socket server by default will host on 0.0.0.0:9999
 The flask api by default will host on 0.0.0.0:80  (normal port for http)
 
-Once the server is running, run adameve_agent.ps1 on the machine. You should see a message on the server informing you that the client has connected.
+Once the server is running, run adameve_agent.ps1 on the machine. The script will prompt for the ip address and the port of the Adam and Eve socket server. You should see a message on the server informing you when the client has connected.
 
-In a web browser, navigate to the ip address of the server and enjoy. 
+In a web browser, navigate to the ip address of the flask server and enjoy. 
 
 
 More functionality to come shortly.
