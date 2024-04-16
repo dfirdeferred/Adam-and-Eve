@@ -5,7 +5,7 @@ Stay tuned..... more prebuilt commands and Dockerized version on the way.
 
 ####### Instructions ##########
 
-Run aande.py
+Run adameve.py
 The socket server by default will host on 0.0.0.0:9999
 The flask api by default will host on 0.0.0.0:80  (normal port for http)
 
