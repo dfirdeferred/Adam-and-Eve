@@ -1,8 +1,8 @@
 param(
     [Parameter(Mandatory=$true)]
-    $ServerIPAddress,  # IP address of the Python server
+    [string]$ServerIPAddress,  # IP address of the Python server
     [Parameter(Mandatory=$true)]
-    $Port              # The port number on which the server is listening
+    [int]$Port              # The port number on which the server is listening
     )
 # Opens Tcp socket session with server
 try {
