@@ -1,145 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    function fetchData() {
+        $.ajax({
+            url: '/server-data',
+            type: 'GET',
+            success: function(response) {
+                $('#responseBox').text(response.socket_output);
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    // Initial fetch
+    fetchData();
+
+    // Refresh every 10 seconds
+    setInterval(fetchData, 10000);
+});
+</script>
+
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AandE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+}
 
-  .bg {
-    background-image: url('{{ url_for('static', filename='mamba.webp') }}');
-    height: 100%; 
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-  }
+body {
+  background-image: url('{{ url_for('static', filename='mamba.webp') }}');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow: hidden;
+}
 
-  .content-box {
-    background-color: white;
-    padding: 20px;
-    width: 300px;
-    margin: 20px;
-    max-height: 500px; /* Set a maximum height */
-    overflow-y: auto; /* Enable vertical scrollbar if needed */
-  }
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
 
-  .main-title {
-    margin-top: 20px;
-    background-color: #f0f0f0;
-    display: inline-block;
-    padding: 10px 20px;
-  }
+.sidenav a, .sidenav button {
+  padding: 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
-  h1 {
-    font-size: 60px;
-    margin: 10px 0;
-    font-family: Times, Times New Roman, serif;
-  }
+.sidenav a:hover, .sidenav button:hover {
+  color: #f1f1f1;
+}
 
-  h3 {
-    font-size: 24px;
-    margin: 10px 0;
-  }
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
 
-  h2 {
-    font-size: 24px;
-    color: #666;
-    margin: 0;
-    font-family: OCR A Std, monospace;
-  }
+#main {
+  flex: 1;
+  padding: 16px;
+  transition: margin-left .5s;
+}
 
-  ul {
-    list-style-type: none; /* Remove numbering */
-    text-align: left;
-    display: inline-block;
-    margin-left: 0;
-    padding-left: 20px;
-  }
+.collapsible-content {
+  display: none;
+  overflow: hidden;
+  background-color: #333;
+  padding: 10px 50px;
+}
 
-  li {
-    margin-bottom: 10px; /* Add some space between list items */
-  }
+.main-title {
+  margin-top: 20px;
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+
+h1, h2 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 60px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+h2 {
+  font-size: 24px;
+  color: #666;
+  font-family: "OCR A Std", monospace;
+}
+
+.response-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
 </style>
-</head>
-<body>
 
-<div class="bg">
-    <div class="main-title">
-        <h1>A.D.A.M. & E.V.E.</h1>
-        <h2>Active Directory Auditing Multitool</h2>
-        <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND</h2>
-        <h2>&nbsp;Exchange Vulnerability Enumerator</h2>
-    </div>
-    <div class="content-box">
-      <h3>Command Endpoints</h3>
-      <ul>
-        <li><a href="http://{{ server_ip }}/cmd/?">/cmd/custom-command</a></li>
-        send custom command to powershell client. ex: Server-IP/cmd/ipconfig
-        <p></p>
-        <li><a href="http://{{ server_ip }}/result">/result</a></li>
-        retieves last result from client
-        <p></p>
-        <li><a href="http://{{ server_ip }}/allresults">/allresults</a></li>
-        retieves content from the log file
-        <p></p>
-        <li><a href="http://{{ server_ip }}/whoami">/whoami</a></li>
-        retieves last result from client
-        <p></p>
-        <li><a href="http://{{ server_ip }}/admins">/admins</a></li>
-        enumerates AD admins
-        <p></p>
-        <li><a href="http://{{ server_ip }}/firewall">/firewall</a></li>
-        enumerates firewall configuration of client
-        <p></p>
-        <li><a href="http://{{ server_ip }}/services">/services</a></li>
-        retrieves local services
-        <p></p>
-        <li><a href="http://{{ server_ip }}/services/dc">/services/dc</a></li>
-        attempts to retrieve services from Domain Controllers
-        <p></p>
-        <li><a href="http://{{ server_ip }}/pwnd">/pwnd</a></li>
-        endpoint for client to retrieve commands via http
-        <p></p>
-        <li><a href="http://{{ server_ip }}/1337">/1337</a></li>
-        endpoint to post custom payloads
-        <p></p>
-        <li><a href="http://{{ server_ip }}/shares">/shares</a></li>
-        enumerates all "server-like computers" for accessible shares
-        <p></p>
-        <li><a href="http://{{ server_ip }}/shares/all">/shares/all</a></li>
-        enumerates all computers for accessible shares
-        <p></p>
-        <li><a href="http://{{ server_ip }}/trimarc">/trimarc</a></li>
-        runs the Trimarc checks script
-        <p></p>
-        <li><a href="http://{{ server_ip }}/dns">/dns</a></li>
-        enumerates domain dns information
-        <p></p>
-        <li><a href="http://{{ server_ip }}/portscan">/portscan</a></li>
-        performs a port scan of the local subnet
-        <p></p>
-        <li><a href="http://{{ server_ip }}/passspray">/passspray</a></li>
-        performs password spray against the domain
-        <p></p>
-        <li><a href="http://{{ server_ip }}/moab">/moab</a></li>
-        attempts to replicate to other clients
-        <p></p>
-        <li><a href="http://{{ server_ip }}/sharphound">/sharphound</a></li>
-        runs the sharphound collector
-        <p></p>
-        <li><a href="http://{{ server_ip }}/azurehound">/azurehound</a></li>
-        runs the azurehound collector 
-        <p></p>
-        <li><a href="http://{{ server_ip }}/kill">/kill</a></li>
-        kills all client connections
-      </ul>
-    </div>
+</head>
+<body onclick="closeNav()">
+
+<div class="response-box" id="responseBox">
+    Waiting for data...
 </div>
+
+
+
+<div class="main-title">
+  <h1>A.D.A.M. & E.V.E.</h1>
+  <h2>Active Directory Auditing Multitool</h2>
+  <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND</h2>
+  <h2>&nbsp;Exchange Vulnerability Enumerator</h2>
+</div>
+
+<div id="mySidenav" class="sidenav" onclick="event.stopPropagation();">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <button onclick="toggleCollapse('collapsible-cmd')">Custom Commands</button>
+  <div id="collapsible-cmd" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/cmd/?"target="_blank"><u>/cmd/custom-command</u><br />Sends command to clients via endpoint parameter</a>
+	  <a href="http://{{ server_ip }}/result"target="_blank"><u>/result</u><br />Cycles through results queue.</a>
+	  <a href="http://{{ server_ip }}/allresults"target="_blank"><u>/allresults</u><br />Retrieves all results from log file</a>
+	  <a href="http://{{ server_ip }}/clear"target="_blank"><u>/clear</u><br />Clears log file.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-who')">User Info</button>
+  <div id="collapsible-who" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/whoami"target="_blank"><u>/whoami</u><br />Retrieves Information about session user.</a>
+	  <a href="http://{{ server_ip }}/admins"target="_blank"><u>/admins</u><br /> Retrieves admin information from Active Directory</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-firewall')">Firewall</button>
+  <div id="collapsible-firewall" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/firewall"target="_blank"><u>/firewall</u><br />Retrieves local information of clients.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-services')">Services</button>
+  <div id="collapsible-services" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/services"target="_blank"><u>/services</u><br />Retrieves local services information from clients.</a>
+	  <a href="http://{{ server_ip }}/services/dc"target="_blank"><u>/services/dc</u><br />Attempts to retrieve services running on Domain Controllers.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-shares')">Shares</button>
+  <div id="collapsible-shares" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/shares"target="_blank"><u>/shares</u><br />Attempts to retrieve shares info from "server-like" objects.</a>
+	  <a href="http://{{ server_ip }}/shares/all"target="_blank"><u>/shares/all,</u><br />Attempts to retrieve shares information from all computer objects.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-dns')">DNS</button>
+  <div id="collapsible-dns" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/dns"target="_blank"><u>/dns</u><br />Attempts to enumerate DNS</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-portscan')">Ping Sweep</button>
+  <div id="collapsible-portscan" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/portscan"target="_blank"><u>/portscan</u><br />Performs a Powershell based ping sweep.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-passspray')">Password Spray</button>
+  <div id="collapsible-passspray" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/passspray"target="_blank"><u>/passspray</u><br />Attempts to run an Active Directory based password spray.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-cradle')">HTTP Cradle</button>
+  <div id="collapsible-cradle" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/pwnd"target="_blank"><u>/pwnd</u><br />Endpoint for client to retrieve commands via http.</a>
+	  <a href="http://{{ server_ip }}/1337"target="_blank"><u>/1337</u><br />Endpoint to post custom payloads.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-exscript')">Experimental Scripts</button>
+  <div id="collapsible-exscript" class="collapsible-content">
+	  <a href="http://{{ server_ip }}/trimarc"target="_blank"><u>/trimarc</u><br />Attempts to run the TrimarcChecks script.</a>
+	  <a href="http://{{ server_ip }}/sharphound"target="_blank"><u>/azurehound</u><br />Attempts to run Azurehound collector.</a>
+	  <a href="http://{{ server_ip }}/sharphound"target="_blank"><u>/bloodhound</u><br />Attempts to run Bloodhound collector.</a>
+	  <a href="http://{{ server_ip }}/moab"target="_blank"><u>/moab</u><br /> Attempts to find writable shares, copy the client script to a new client and invoke the script.</a>
+  </div>
+  <button onclick="toggleCollapse('collapsible-kill')">KILL</button>
+  <div id="collapsible-kill" class="collapsible-content">
+    <a href="http://{{ server_ip }}/kill"target="_blank">/kill<br />Kills all client connections.</a>
+  </div>
+</div>
+
+<div id="main">
+    <span style="font-size:25px; color: white; font-weight: bold; cursor:pointer" onclick="openNav(event)">&#9776; Command Endpoints</span>
+</div>
+
+<script>
+function openNav(event) {
+  event.stopPropagation(); // Prevents the click event from propagating to body immediately
+  document.getElementById("mySidenav").style.width = "350px";
+  document.getElementById("main").style.marginLeft = "350px";
+}
+
+function closeNav() {
+  if (document.getElementById("mySidenav").style.width !== "0px") {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+  }
+}
+
+function toggleCollapse(id) {
+  var content = document.getElementById(id);
+  if (content.style.display === "block") {
+    content.style.display = "none";
+  } else {
+    content.style.display = "block";
+  }
+}
+
+document.body.addEventListener('click', function(event) {
+  var isClickInside = document.getElementById("mySidenav").contains(event.target);
+  if (!isClickInside) {
+    closeNav();
+  }
+}, false);
+</script>
 
 </body>
 </html>
