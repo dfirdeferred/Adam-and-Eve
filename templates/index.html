@@ -7,6 +7,7 @@ $(document).ready(function() {
         $.ajax({
             url: '/server-data',
             type: 'GET',
+	    dataType: 'json',
             success: function(response) {
                 $('#responseBox').text(response.socket_output);
             },
@@ -19,13 +20,14 @@ $(document).ready(function() {
     // Initial fetch
     fetchData();
 
-    // Refresh every 10 seconds
-    setInterval(fetchData, 10000);
+    // Refresh every 5 seconds
+    setInterval(fetchData, 5000);
 });
 </script>
 
 
 <head>
+<title>A.D.A.M. & E.V.E.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 html, body {
@@ -129,6 +131,8 @@ h2 {
   width: 300px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  height: 400px; /* Set a fixed height to enable scrolling */
+  overflow: auto; /* Add a scrollbar when needed */
 }
 
 </style>
@@ -151,8 +155,9 @@ h2 {
 
 <div id="mySidenav" class="sidenav" onclick="event.stopPropagation();">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <button onclick="toggleCollapse('collapsible-cmd')">Custom Commands</button>
+  <button onclick="toggleCollapse('collapsible-cmd')">Management Commands</button>
   <div id="collapsible-cmd" class="collapsible-content">
+    <a href="http://{{ server_ip }}/clients"target="_blank"><u>/clients</u><br />Lists connected clients.</a>
 	  <a href="http://{{ server_ip }}/cmd/?"target="_blank"><u>/cmd/custom-command</u><br />Sends command to clients via endpoint parameter</a>
 	  <a href="http://{{ server_ip }}/result"target="_blank"><u>/result</u><br />Cycles through results queue.</a>
 	  <a href="http://{{ server_ip }}/allresults"target="_blank"><u>/allresults</u><br />Retrieves all results from log file</a>
@@ -162,49 +167,44 @@ h2 {
   <div id="collapsible-who" class="collapsible-content">
 	  <a href="http://{{ server_ip }}/whoami"target="_blank"><u>/whoami</u><br />Retrieves Information about session user.</a>
 	  <a href="http://{{ server_ip }}/admins"target="_blank"><u>/admins</u><br /> Retrieves admin information from Active Directory</a>
-  </div>
-  <button onclick="toggleCollapse('collapsible-firewall')">Firewall</button>
-  <div id="collapsible-firewall" class="collapsible-content">
-	  <a href="http://{{ server_ip }}/firewall"target="_blank"><u>/firewall</u><br />Retrieves local information of clients.</a>
+      <a href="http://{{ server_ip }}/enumusers"target="_blank">/enumusers<br />Enumerates risky AD users.</a>
+      <a href="http://{{ server_ip }}/serviceaccounts"target="_blank">/enuminfra<br />Enumerates potential service accounts.</a> 
+      <a href="http://{{ server_ip }}/enuminfra"target="_blank">/enuminfra<br />Enumerates risky AD settings.</a>  
+      <a href="http://{{ server_ip }}/conflate"target="_blank">/conflate<br />Attempts to convert PS script to a 1 liner.</a>  
   </div>
   <button onclick="toggleCollapse('collapsible-services')">Services</button>
   <div id="collapsible-services" class="collapsible-content">
 	  <a href="http://{{ server_ip }}/services"target="_blank"><u>/services</u><br />Retrieves local services information from clients.</a>
 	  <a href="http://{{ server_ip }}/services/dc"target="_blank"><u>/services/dc</u><br />Attempts to retrieve services running on Domain Controllers.</a>
-  </div>
-  <button onclick="toggleCollapse('collapsible-shares')">Shares</button>
-  <div id="collapsible-shares" class="collapsible-content">
-	  <a href="http://{{ server_ip }}/shares"target="_blank"><u>/shares</u><br />Attempts to retrieve shares info from "server-like" objects.</a>
-	  <a href="http://{{ server_ip }}/shares/all"target="_blank"><u>/shares/all,</u><br />Attempts to retrieve shares information from all computer objects.</a>
-  </div>
-  <button onclick="toggleCollapse('collapsible-dns')">DNS</button>
-  <div id="collapsible-dns" class="collapsible-content">
-	  <a href="http://{{ server_ip }}/dns"target="_blank"><u>/dns</u><br />Attempts to enumerate DNS</a>
-  </div>
-  <button onclick="toggleCollapse('collapsible-portscan')">Ping Sweep</button>
+    <a href="http://{{ server_ip }}/firewall"target="_blank"><u>/firewall</u><br />Retrieves local information of clients.</a>
+    <a href="http://{{ server_ip }}/dns"target="_blank"><u>/dns</u><br />Attempts to enumerate DNS</a>
+    <a href="http://{{ server_ip }}/shares"target="_blank"><u>/shares</u><br />Attempts to retrieve shares info from "server-like" objects.</a>
+	</div>
+  <button onclick="toggleCollapse('collapsible-portscan')">Less Blue Tools</button>
   <div id="collapsible-portscan" class="collapsible-content">
+    <a href="http://{{ server_ip }}/protosign"target="_blank"><u>/protosign</u><br />Checks AD for protocol signing.</a>
 	  <a href="http://{{ server_ip }}/portscan"target="_blank"><u>/portscan</u><br />Performs a Powershell based ping sweep.</a>
-  </div>
-  <button onclick="toggleCollapse('collapsible-passspray')">Password Spray</button>
-  <div id="collapsible-passspray" class="collapsible-content">
-	  <a href="http://{{ server_ip }}/passspray"target="_blank"><u>/passspray</u><br />Attempts to run an Active Directory based password spray.</a>
+    <a href="http://{{ server_ip }}/passspray"target="_blank"><u>/passspray</u><br />Attempts to run an Active Directory based password spray.</a>
+    <a href="http://{{ server_ip }}/trimarc"target="_blank"><u>/trimarc</u><br />Attempts to run the TrimarcChecks script.</a>
+	  <a href="http://{{ server_ip }}/azurehound"target="_blank"><u>/azurehound</u><br />Attempts to run Azurehound collector.</a>
+	  <a href="http://{{ server_ip }}/sharphound"target="_blank"><u>/bloodhound</u><br />Attempts to run Bloodhound collector.</a>
+	  <a href="http://{{ server_ip }}/moab"target="_blank"><u>/moab</u><br /> Attempts to find writable shares, copy the client script to a new client and invoke the script.</a>
+    <a href="http://{{ server_ip }}/conflate"target="_blank">/conflate<br />Attempts to convert PS script to a 1 liner.</a> 
   </div>
   <button onclick="toggleCollapse('collapsible-cradle')">HTTP Cradle</button>
   <div id="collapsible-cradle" class="collapsible-content">
 	  <a href="http://{{ server_ip }}/pwnd"target="_blank"><u>/pwnd</u><br />Endpoint for client to retrieve commands via http.</a>
 	  <a href="http://{{ server_ip }}/1337"target="_blank"><u>/1337</u><br />Endpoint to post custom payloads.</a>
   </div>
-  <button onclick="toggleCollapse('collapsible-exscript')">Experimental Scripts</button>
-  <div id="collapsible-exscript" class="collapsible-content">
-	  <a href="http://{{ server_ip }}/trimarc"target="_blank"><u>/trimarc</u><br />Attempts to run the TrimarcChecks script.</a>
-	  <a href="http://{{ server_ip }}/sharphound"target="_blank"><u>/azurehound</u><br />Attempts to run Azurehound collector.</a>
-	  <a href="http://{{ server_ip }}/sharphound"target="_blank"><u>/bloodhound</u><br />Attempts to run Bloodhound collector.</a>
-	  <a href="http://{{ server_ip }}/moab"target="_blank"><u>/moab</u><br /> Attempts to find writable shares, copy the client script to a new client and invoke the script.</a>
+  <button onclick="toggleCollapse('exchange-scan')">Exchange</button>
+  <div id="exchange-scan" class="collapsible-content">
+    <a href="http://{{ server_ip }}/exchange"target="_blank">/exchange<br />Runs a light exchange vulnerability scan</a>
   </div>
-  <button onclick="toggleCollapse('collapsible-kill')">KILL</button>
+ <button onclick="toggleCollapse('collapsible-kill')">KILL</button>
   <div id="collapsible-kill" class="collapsible-content">
     <a href="http://{{ server_ip }}/kill"target="_blank">/kill<br />Kills all client connections.</a>
-  </div>
+  </div> 
+ 
 </div>
 
 <div id="main">

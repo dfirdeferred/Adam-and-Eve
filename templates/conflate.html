@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell Script Conflator</title>
+    <style>
+	.bg {
+            background-image: url('{{ url_for('static', filename='mamba.webp') }}');
+            height: 100%; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            /* Position relative for the response box positioning */
+            position: relative;
+        }
+        .input-box, .output-box {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .output-box {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <h1>PowerShell Script Conflator</h1>
+        <form id="scriptForm" method="post">
+            <textarea id="scriptInput" name="script" class="input-box" placeholder="Paste or drop your PowerShell script here" rows="10"></textarea>
+            <input type="submit" value="Conflate" />
+        </form>
+        <div>
+            <h2>One-Liner Script</h2>
+            <div id="oneLinerOutput" class="output-box"></div>
+        </div>
+        <div>
+            <h2>URL Encoded One-Liner</h2>
+            <div id="urlEncodedOutput" class="output-box"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('scriptForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('/conflate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('oneLinerOutput').innerText = data.one_liner;
+                    document.getElementById('urlEncodedOutput').innerText = data.url_encoded;
+                }
+            });
+        });
+
+        const scriptInput = document.getElementById('scriptInput');
+        scriptInput.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+
+        scriptInput.addEventListener('drop', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    scriptInput.value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html>

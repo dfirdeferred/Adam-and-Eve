@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A.D.A.M. & E.V.E.</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .bg {
+        background-image: url('{{ url_for('static', filename='mamba.webp') }}');
+        height: 100%; 
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        /* Position relative for the response box positioning */
+        position: relative;
+        }
+       
+        
+
+        .response-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg">
+        <div class="response-box" id="responseBox">
+            {{ response }}
+        </div>
+    </div>
+</body>
+</html>
+
+
+
